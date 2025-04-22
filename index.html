@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vigenère Cipher Encoder/Decoder</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f4f4f4; }
+    textarea, input { width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px 20px; margin-right: 10px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 Vigenère Cipher</h1>
+    <label>Key:</label>
+    <input type="text" id="key" placeholder="Enter keyword (e.g. KEYWORD)" />
+
+    <label>Text:</label>
+    <textarea id="inputText" rows="5" placeholder="Enter text here..."></textarea>
+
+    <div>
+      <button onclick="encrypt()">Encrypt</button>
+      <button onclick="decrypt()">Decrypt</button>
+    </div>
+
+    <label>Result:</label>
+    <textarea id="resultText" rows="5" readonly></textarea>
+  </div>
+
+  <script>
+    function vigenere(text, key, encrypting = true) {
+      text = text.toUpperCase();
+      key = key.toUpperCase();
+      let result = '';
+      let keyIndex = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        const c = text.charCodeAt(i);
+        if (c >= 65 && c <= 90) {
+          const offset = key.charCodeAt(keyIndex % key.length) - 65;
+          const shift = encrypting ? offset : (26 - offset);
+          result += String.fromCharCode((c - 65 + shift) % 26 + 65);
+          keyIndex++;
+        } else {
+          result += text[i]; // non-letters remain unchanged
+        }
+      }
+      return result;
+    }
+
+    function encrypt() {
+      const text = document.getElementById('inputText').value;
+      const key = document.getElementById('key').value;
+      document.getElementById('resultText').value = vigenere(text, key, true);
+    }
+
+    function decrypt() {
+      const text = document.getElementById('inputText').value;
+      const key = document.getElementById('key').value;
+      document.getElementById('resultText').value = vigenere(text, key, false);
+    }
+  </script>
+</body>
+</html>
